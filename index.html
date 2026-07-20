@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compter en français — French Numbers Lesson</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&display=swap');
+
+  :root{
+    --board:#1F2E28;
+    --board-2:#263831;
+    --chalk:#F2EFE6;
+    --chalk-dim:#B9C4BC;
+    --gold:#D4A857;
+    --rose:#C1454B;
+    --rail-line:#3A4A43;
+  }
+
+  *{box-sizing:border-box;}
+  html, body{height:100%;}
+  body{
+    margin:0;
+    background:var(--board);
+    color:var(--chalk);
+    font-family:'Inter',sans-serif;
+    display:flex;
+    min-height:100vh;
+  }
+
+  /* Sidebar */
+  .sidebar{
+    width:230px;flex:none;
+    background:var(--board-2);
+    border-right:1px solid var(--rail-line);
+    padding:28px 18px;
+    position:sticky;top:0;height:100vh;overflow-y:auto;
+  }
+  .sidebar-title{
+    font-family:'Fraunces',serif;font-weight:600;font-size:18px;
+    margin:0 0 4px;
+  }
+  .sidebar-sub{
+    color:var(--chalk-dim);font-size:12px;margin:0 0 24px;
+  }
+  .lesson-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;}
+  .lesson-link{
+    display:flex;align-items:center;justify-content:space-between;gap:8px;
+    padding:10px 12px;border-radius:8px;color:var(--chalk-dim);
+    text-decoration:none;font-size:14px;transition:background .15s,color .15s;
+  }
+  .lesson-link:hover{background:var(--rail-line);color:var(--chalk);}
+  .lesson-link.active{background:var(--gold);color:#2b2110;font-weight:600;}
+  .lesson-link.soon{cursor:default;color:var(--chalk-dim);opacity:.55;}
+  .lesson-link.soon:hover{background:transparent;color:var(--chalk-dim);}
+  .soon-badge{
+    font-size:9px;letter-spacing:.06em;text-transform:uppercase;
+    border:1px solid var(--rail-line);border-radius:4px;padding:2px 5px;flex:none;
+  }
+
+  .content{flex:1;min-width:0;padding:32px 24px 60px;overflow-x:hidden;}
+  .wrap{max-width:900px;margin:0 auto;}
+
+  @media (max-width:720px){
+    body{flex-direction:column;}
+    .sidebar{
+      width:100%;height:auto;position:relative;
+      padding:16px;border-right:none;border-bottom:1px solid var(--rail-line);
+    }
+    .lesson-list{flex-direction:row;overflow-x:auto;}
+    .lesson-link{white-space:nowrap;}
+    .sidebar-sub{margin-bottom:12px;}
+  }
+
+  header{text-align:center;margin-bottom:36px;}
+  .eyebrow{
+    font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--gold);margin:0 0 8px;font-weight:600;
+  }
+  h1{
+    font-family:'Fraunces',serif;font-weight:600;font-size:clamp(30px,5vw,46px);
+    margin:0 0 10px;
+  }
+  header p{color:var(--chalk-dim);font-size:15px;margin:0 auto;max-width:520px;}
+
+  /* Decade nav */
+  .decade-outer{
+    overflow-x:auto;padding:16px 8px 20px;margin-bottom:8px;
+    border-top:1px dashed var(--rail-line);border-bottom:1px dashed var(--rail-line);
+  }
+  .decade-rail{display:flex;gap:8px;width:max-content;}
+  .dec-btn{
+    padding:9px 16px;border-radius:999px;
+    border:1.5px solid var(--rail-line);background:transparent;color:var(--chalk-dim);
+    font-family:'Inter',sans-serif;font-size:13px;cursor:pointer;flex:none;
+    transition:all .15s ease;white-space:nowrap;
+  }
+  .dec-btn:hover{border-color:var(--gold);color:var(--chalk);}
+  .dec-btn.active{background:var(--gold);border-color:var(--gold);color:#2b2110;font-weight:600;}
+
+  /* Flashcard */
+  .card{
+    background:var(--board-2);border-radius:16px;padding:36px 20px;
+    text-align:center;margin:28px 0 32px;
+    border:1px solid var(--rail-line);
+    display:flex;align-items:center;gap:8px;
+  }
+  .nav-arrow{
+    background:transparent;border:1.5px solid var(--rail-line);color:var(--chalk-dim);
+    width:40px;height:40px;border-radius:50%;cursor:pointer;flex:none;
+    font-size:18px;display:flex;align-items:center;justify-content:center;
+    transition:border-color .15s;
+  }
+  .nav-arrow:hover{border-color:var(--gold);color:var(--chalk);}
+  .card-main{flex:1;min-width:0;}
+  .card-main .num{font-size:13px;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;}
+  .card-main .fr{
+    font-family:'Fraunces',serif;font-weight:600;font-size:clamp(32px,6vw,58px);
+    margin:0 0 10px;word-break:break-word;
+  }
+  .card-main .phon{font-size:19px;color:var(--gold);margin:0 0 22px;font-style:italic;}
+  .card-main .phon span{font-style:normal;color:var(--chalk-dim);font-size:13px;display:block;margin-top:4px;}
+  .hear-btn{
+    background:var(--gold);border:none;color:#2b2110;font-weight:600;
+    padding:12px 26px;border-radius:999px;font-size:15px;cursor:pointer;
+    font-family:'Inter',sans-serif;display:inline-flex;align-items:center;gap:8px;
+    transition:transform .1s ease;
+  }
+  .hear-btn:hover{transform:scale(1.04);}
+  .hear-btn:active{transform:scale(0.97);}
+  .hear-btn svg{width:18px;height:18px;fill:#2b2110;}
+
+  /* Jump box */
+  .jump{display:flex;gap:8px;justify-content:center;align-items:center;margin:0 0 28px;}
+  .jump input{
+    width:70px;text-align:center;background:var(--board-2);border:1.5px solid var(--rail-line);
+    color:var(--chalk);border-radius:8px;padding:8px;font-size:15px;font-family:'Inter',sans-serif;
+  }
+  .jump button{
+    background:transparent;border:1.5px solid var(--rail-line);color:var(--chalk-dim);
+    padding:8px 16px;border-radius:8px;cursor:pointer;font-size:14px;font-family:'Inter',sans-serif;
+  }
+  .jump button:hover{border-color:var(--gold);color:var(--chalk);}
+
+  /* Grid */
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:20px;margin:44px 0 16px;color:var(--chalk);}
+  .group-label{color:var(--gold);font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin:22px 0 10px;}
+  .grid{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;
+  }
+  .mini{
+    background:var(--board-2);border:1px solid var(--rail-line);border-radius:10px;
+    padding:12px 8px;text-align:center;cursor:pointer;transition:border-color .15s;
+  }
+  .mini:hover{border-color:var(--gold);}
+  .mini.active{border-color:var(--gold);border-width:1.5px;}
+  .mini .mn{font-size:11px;color:var(--gold);}
+  .mini .mf{font-family:'Fraunces',serif;font-size:17px;margin:4px 0 2px;word-break:break-word;}
+  .mini .mp{font-size:11px;color:var(--chalk-dim);font-style:italic;}
+
+  /* Quiz */
+  .quiz-box{
+    background:var(--board-2);border:1px solid var(--rail-line);border-radius:16px;
+    padding:28px;margin-top:44px;text-align:center;
+  }
+  .quiz-box p.q{color:var(--chalk-dim);font-size:13px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 12px;}
+  .choices{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+  .choice{
+    background:transparent;border:1.5px solid var(--rail-line);color:var(--chalk);
+    padding:10px 18px;border-radius:10px;font-size:16px;cursor:pointer;font-family:'Inter',sans-serif;
+  }
+  .choice:hover{border-color:var(--gold);}
+  .choice.correct{background:var(--gold);border-color:var(--gold);color:#2b2110;font-weight:600;}
+  .choice.wrong{background:var(--rose);border-color:var(--rose);color:#fff;}
+  .quiz-status{margin-top:16px;font-size:14px;color:var(--chalk-dim);min-height:20px;}
+  .next-btn{
+    margin-top:14px;background:none;border:1px solid var(--rail-line);color:var(--chalk-dim);
+    padding:8px 20px;border-radius:999px;cursor:pointer;font-size:13px;font-family:'Inter',sans-serif;
+  }
+  .next-btn:hover{border-color:var(--gold);color:var(--chalk);}
+
+  footer{
+    text-align:center;margin-top:40px;padding-top:20px;
+    border-top:1px dashed var(--rail-line);
+    color:var(--chalk-dim);font-size:12px;
+  }
+
+  ::-webkit-scrollbar{height:6px;}
+  ::-webkit-scrollbar-thumb{background:var(--rail-line);border-radius:3px;}
+
+  @media (max-width:480px){
+    .card{flex-direction:column;}
+    .nav-arrow{order:2;}
+  }
+</style>
+</head>
+<body>
+
+<!--
+  HOW TO ADD ANOTHER LESSON LATER:
+  1. Save your new file (e.g. greetings.html) in the same folder as this one.
+  2. In the <ul class="lesson-list"> below, find its <li> and change:
+       <a class="lesson-link soon" href="#">
+     to:
+       <a class="lesson-link" href="greetings.html">
+     and remove the <span class="soon-badge">Soon</span> line.
+  3. Copy this whole sidebar block (<nav class="sidebar">...</nav>) into the new
+     file's <body>, and mark that lesson's <li> as active instead of this one.
+-->
+<nav class="sidebar">
+  <p class="sidebar-title">French lessons</p>
+  <p class="sidebar-sub">Click a topic to open it</p>
+  <ul class="lesson-list">
+    <li><a class="lesson-link active" href="index.html">Numbers 0–100</a></li>
+    <li><a class="lesson-link" href="french-alphabet-lesson.html">The alphabet (A–Z)</a></li>
+    <li><a class="lesson-link soon" href="#">Greetings & introductions <span class="soon-badge">Soon</span></a></li>
+    <li><a class="lesson-link soon" href="#">Food & dining <span class="soon-badge">Soon</span></a></li>
+    <li><a class="lesson-link soon" href="#">Everyday phrases <span class="soon-badge">Soon</span></a></li>
+  </ul>
+</nav>
+
+<main class="content">
+<div class="wrap">
+  <header>
+    <p class="eyebrow">French lesson · Numbers 0–100</p>
+    <h1>Compter en français</h1>
+    <p>Browse by group of ten, click any number to see its spelling, hear it spoken aloud, and read an English-style pronunciation guide.</p>
+  </header>
+
+  <div class="decade-outer">
+    <div class="decade-rail" id="decadeRail"></div>
+  </div>
+
+  <div class="jump">
+    <input type="number" id="jumpInput" min="0" max="100" placeholder="0–100">
+    <button id="jumpBtn">Go to number</button>
+  </div>
+
+  <div class="card">
+    <button class="nav-arrow" id="prevBtn" aria-label="Previous number">‹</button>
+    <div class="card-main">
+      <div class="num" id="cardIndex">Number 0</div>
+      <div class="fr" id="cardFr">zéro</div>
+      <div class="phon" id="cardPhon">zay-ROH<span id="cardNote"></span></div>
+      <button class="hear-btn" id="hearBtn">
+        <svg viewBox="0 0 24 24"><path d="M3 10v4h4l5 5V5L7 10H3zm13.5 2c0-1.77-1-3.29-2.5-4.03v8.05c1.5-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+        Hear it
+      </button>
+    </div>
+    <button class="nav-arrow" id="nextBtn" aria-label="Next number">›</button>
+  </div>
+
+  <h2>Numbers by group</h2>
+  <div id="groups"></div>
+
+  <div class="quiz-box">
+    <p class="q">Quick practice — listen and choose</p>
+    <button class="hear-btn" id="quizPlay" style="margin-bottom:20px;">
+      <svg viewBox="0 0 24 24"><path d="M3 10v4h4l5 5V5L7 10H3zm13.5 2c0-1.77-1-3.29-2.5-4.03v8.05c1.5-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+      Play the number
+    </button>
+    <div class="choices" id="choices"></div>
+    <div class="quiz-status" id="quizStatus"></div>
+    <button class="next-btn" id="nextQuiz">Next question →</button>
+  </div>
+
+  <footer>Coded by Ariful · data sourced from the internet<br>Inspired by Nushin Tarannum Mahi, my love</footer>
+</div>
+
+<script>
+const numbers = [{"n": 0, "fr": "zéro", "ph": "zay-ROH"}, {"n": 1, "fr": "un", "ph": "uh(n)", "note": "nasal, like saying \"un\" through your nose"}, {"n": 2, "fr": "deux", "ph": "duh"}, {"n": 3, "fr": "trois", "ph": "twah"}, {"n": 4, "fr": "quatre", "ph": "kat-ruh"}, {"n": 5, "fr": "cinq", "ph": "sank"}, {"n": 6, "fr": "six", "ph": "seess"}, {"n": 7, "fr": "sept", "ph": "set"}, {"n": 8, "fr": "huit", "ph": "weet"}, {"n": 9, "fr": "neuf", "ph": "nuff"}, {"n": 10, "fr": "dix", "ph": "deess"}, {"n": 11, "fr": "onze", "ph": "ohnz"}, {"n": 12, "fr": "douze", "ph": "dooz"}, {"n": 13, "fr": "treize", "ph": "trehz"}, {"n": 14, "fr": "quatorze", "ph": "ka-TORZ"}, {"n": 15, "fr": "quinze", "ph": "kanz"}, {"n": 16, "fr": "seize", "ph": "sez"}, {"n": 17, "fr": "dix-sept", "ph": "dee-SET"}, {"n": 18, "fr": "dix-huit", "ph": "deez-WEET"}, {"n": 19, "fr": "dix-neuf", "ph": "deez-NUFF"}, {"n": 20, "fr": "vingt", "ph": "van", "note": "nasal \"an\" sound, like French \"vin\""}, {"n": 21, "fr": "vingt-et-un", "ph": "van-tay-uh(n)"}, {"n": 22, "fr": "vingt-deux", "ph": "van-duh"}, {"n": 23, "fr": "vingt-trois", "ph": "van-twah"}, {"n": 24, "fr": "vingt-quatre", "ph": "van-kat-ruh"}, {"n": 25, "fr": "vingt-cinq", "ph": "van-sank"}, {"n": 26, "fr": "vingt-six", "ph": "van-seess"}, {"n": 27, "fr": "vingt-sept", "ph": "van-set"}, {"n": 28, "fr": "vingt-huit", "ph": "van-weet"}, {"n": 29, "fr": "vingt-neuf", "ph": "van-nuff"}, {"n": 30, "fr": "trente", "ph": "trahnt"}, {"n": 31, "fr": "trente-et-un", "ph": "trahnt-tay-uh(n)"}, {"n": 32, "fr": "trente-deux", "ph": "trahnt-duh"}, {"n": 33, "fr": "trente-trois", "ph": "trahnt-twah"}, {"n": 34, "fr": "trente-quatre", "ph": "trahnt-kat-ruh"}, {"n": 35, "fr": "trente-cinq", "ph": "trahnt-sank"}, {"n": 36, "fr": "trente-six", "ph": "trahnt-seess"}, {"n": 37, "fr": "trente-sept", "ph": "trahnt-set"}, {"n": 38, "fr": "trente-huit", "ph": "trahnt-weet"}, {"n": 39, "fr": "trente-neuf", "ph": "trahnt-nuff"}, {"n": 40, "fr": "quarante", "ph": "ka-RAHNT"}, {"n": 41, "fr": "quarante-et-un", "ph": "ka-RAHNT-tay-uh(n)"}, {"n": 42, "fr": "quarante-deux", "ph": "ka-RAHNT-duh"}, {"n": 43, "fr": "quarante-trois", "ph": "ka-RAHNT-twah"}, {"n": 44, "fr": "quarante-quatre", "ph": "ka-RAHNT-kat-ruh"}, {"n": 45, "fr": "quarante-cinq", "ph": "ka-RAHNT-sank"}, {"n": 46, "fr": "quarante-six", "ph": "ka-RAHNT-seess"}, {"n": 47, "fr": "quarante-sept", "ph": "ka-RAHNT-set"}, {"n": 48, "fr": "quarante-huit", "ph": "ka-RAHNT-weet"}, {"n": 49, "fr": "quarante-neuf", "ph": "ka-RAHNT-nuff"}, {"n": 50, "fr": "cinquante", "ph": "san-KAHNT"}, {"n": 51, "fr": "cinquante-et-un", "ph": "san-KAHNT-tay-uh(n)"}, {"n": 52, "fr": "cinquante-deux", "ph": "san-KAHNT-duh"}, {"n": 53, "fr": "cinquante-trois", "ph": "san-KAHNT-twah"}, {"n": 54, "fr": "cinquante-quatre", "ph": "san-KAHNT-kat-ruh"}, {"n": 55, "fr": "cinquante-cinq", "ph": "san-KAHNT-sank"}, {"n": 56, "fr": "cinquante-six", "ph": "san-KAHNT-seess"}, {"n": 57, "fr": "cinquante-sept", "ph": "san-KAHNT-set"}, {"n": 58, "fr": "cinquante-huit", "ph": "san-KAHNT-weet"}, {"n": 59, "fr": "cinquante-neuf", "ph": "san-KAHNT-nuff"}, {"n": 60, "fr": "soixante", "ph": "swa-SAHNT"}, {"n": 61, "fr": "soixante-et-un", "ph": "swa-SAHNT-tay-uh(n)"}, {"n": 62, "fr": "soixante-deux", "ph": "swa-SAHNT-duh"}, {"n": 63, "fr": "soixante-trois", "ph": "swa-SAHNT-twah"}, {"n": 64, "fr": "soixante-quatre", "ph": "swa-SAHNT-kat-ruh"}, {"n": 65, "fr": "soixante-cinq", "ph": "swa-SAHNT-sank"}, {"n": 66, "fr": "soixante-six", "ph": "swa-SAHNT-seess"}, {"n": 67, "fr": "soixante-sept", "ph": "swa-SAHNT-set"}, {"n": 68, "fr": "soixante-huit", "ph": "swa-SAHNT-weet"}, {"n": 69, "fr": "soixante-neuf", "ph": "swa-SAHNT-nuff"}, {"n": 70, "fr": "soixante-dix", "ph": "swa-sahnt-DEESS", "note": "literally \"sixty-ten\""}, {"n": 71, "fr": "soixante et onze", "ph": "swa-sahnt-tay-OHNZ", "note": "literally \"sixty-eleven\" — with \"et\" (and)"}, {"n": 72, "fr": "soixante-douze", "ph": "swa-SAHNT-dooz"}, {"n": 73, "fr": "soixante-treize", "ph": "swa-SAHNT-trehz"}, {"n": 74, "fr": "soixante-quatorze", "ph": "swa-SAHNT-ka-TORZ"}, {"n": 75, "fr": "soixante-quinze", "ph": "swa-SAHNT-kanz"}, {"n": 76, "fr": "soixante-seize", "ph": "swa-SAHNT-sez"}, {"n": 77, "fr": "soixante-dix-sept", "ph": "swa-SAHNT-dee-SET"}, {"n": 78, "fr": "soixante-dix-huit", "ph": "swa-SAHNT-deez-WEET"}, {"n": 79, "fr": "soixante-dix-neuf", "ph": "swa-SAHNT-deez-NUFF"}, {"n": 80, "fr": "quatre-vingts", "ph": "kat-ruh-VAN", "note": "literally \"four-twenties\""}, {"n": 81, "fr": "quatre-vingt-un", "ph": "kat-ruh-van-UH(N)", "note": "literally \"four-twenty-one\" — no \"et\" here, unlike 21/31/41/51/61"}, {"n": 82, "fr": "quatre-vingt-deux", "ph": "kat-ruh-van-duh"}, {"n": 83, "fr": "quatre-vingt-trois", "ph": "kat-ruh-van-twah"}, {"n": 84, "fr": "quatre-vingt-quatre", "ph": "kat-ruh-van-kat-ruh"}, {"n": 85, "fr": "quatre-vingt-cinq", "ph": "kat-ruh-van-sank"}, {"n": 86, "fr": "quatre-vingt-six", "ph": "kat-ruh-van-seess"}, {"n": 87, "fr": "quatre-vingt-sept", "ph": "kat-ruh-van-set"}, {"n": 88, "fr": "quatre-vingt-huit", "ph": "kat-ruh-van-weet"}, {"n": 89, "fr": "quatre-vingt-neuf", "ph": "kat-ruh-van-nuff"}, {"n": 90, "fr": "quatre-vingt-dix", "ph": "kat-ruh-van-DEESS", "note": "literally \"four-twenty-ten\""}, {"n": 91, "fr": "quatre-vingt-onze", "ph": "kat-ruh-van-OHNZ"}, {"n": 92, "fr": "quatre-vingt-douze", "ph": "kat-ruh-van-dooz"}, {"n": 93, "fr": "quatre-vingt-treize", "ph": "kat-ruh-van-trehz"}, {"n": 94, "fr": "quatre-vingt-quatorze", "ph": "kat-ruh-van-ka-TORZ"}, {"n": 95, "fr": "quatre-vingt-quinze", "ph": "kat-ruh-van-kanz"}, {"n": 96, "fr": "quatre-vingt-seize", "ph": "kat-ruh-van-sez"}, {"n": 97, "fr": "quatre-vingt-dix-sept", "ph": "kat-ruh-van-dee-SET"}, {"n": 98, "fr": "quatre-vingt-dix-huit", "ph": "kat-ruh-van-deez-WEET"}, {"n": 99, "fr": "quatre-vingt-dix-neuf", "ph": "kat-ruh-van-deez-NUFF"}, {"n": 100, "fr": "cent", "ph": "sahn", "note": "one hundred, no article needed (not \"un cent\")"}];
+
+let current = 0;
+const groupsEl = document.getElementById('groups');
+const decadeRail = document.getElementById('decadeRail');
+
+function speak(text){
+  if(!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'fr-FR';
+  u.rate = 0.85;
+  window.speechSynthesis.speak(u);
+}
+
+function renderCard(i){
+  current = Math.max(0, Math.min(numbers.length - 1, i));
+  const item = numbers[current];
+  document.getElementById('cardIndex').textContent = 'Number ' + item.n;
+  document.getElementById('cardFr').textContent = item.fr;
+  document.getElementById('cardPhon').firstChild.textContent = item.ph;
+  document.getElementById('cardNote').textContent = item.note || '';
+  document.querySelectorAll('.mini').forEach((d, idx) => d.classList.toggle('active', idx === current));
+  document.querySelectorAll('.dec-btn').forEach(d => {
+    d.classList.toggle('active', parseInt(d.dataset.start) <= item.n && item.n <= parseInt(d.dataset.end));
+  });
+}
+
+/* Decade nav buttons: 0-9, 10-19, ... 90-99, 100 */
+const decades = [];
+for(let s = 0; s <= 90; s += 10) decades.push([s, s+9]);
+decades.push([100,100]);
+decades.forEach(([s,e]) => {
+  const btn = document.createElement('button');
+  btn.className = 'dec-btn';
+  btn.dataset.start = s; btn.dataset.end = e;
+  btn.textContent = s === e ? String(s) : `${s}–${e}`;
+  btn.addEventListener('click', () => {
+    document.getElementById('group-' + s).scrollIntoView({behavior:'smooth', block:'start'});
+  });
+  decadeRail.appendChild(btn);
+});
+
+/* Grouped grid */
+decades.forEach(([s,e]) => {
+  const label = document.createElement('div');
+  label.className = 'group-label';
+  label.id = 'group-' + s;
+  label.textContent = s === e ? String(s) : `${s}–${e}`;
+  groupsEl.appendChild(label);
+
+  const grid = document.createElement('div');
+  grid.className = 'grid';
+  numbers.filter(item => item.n >= s && item.n <= e).forEach(item => {
+    const idx = numbers.findIndex(x => x.n === item.n);
+    const mini = document.createElement('div');
+    mini.className = 'mini';
+    mini.innerHTML = `<div class="mn">${item.n}</div><div class="mf">${item.fr}</div><div class="mp">${item.ph}</div>`;
+    mini.addEventListener('click', () => { renderCard(idx); speak(item.fr); window.scrollTo({top:0, behavior:'smooth'}); });
+    grid.appendChild(mini);
+  });
+  groupsEl.appendChild(grid);
+});
+
+document.getElementById('hearBtn').addEventListener('click', () => speak(numbers[current].fr));
+document.getElementById('prevBtn').addEventListener('click', () => renderCard(current - 1));
+document.getElementById('nextBtn').addEventListener('click', () => renderCard(current + 1));
+document.getElementById('jumpBtn').addEventListener('click', () => {
+  const val = parseInt(document.getElementById('jumpInput').value);
+  if(!isNaN(val) && val >= 0 && val <= 100){
+    const idx = numbers.findIndex(x => x.n === val);
+    if(idx >= 0) renderCard(idx);
+  }
+});
+renderCard(0);
+
+/* Quiz over all 0-100 */
+const choicesEl = document.getElementById('choices');
+const statusEl = document.getElementById('quizStatus');
+let quizAnswer = null;
+
+function newQuestion(){
+  statusEl.textContent = '';
+  const answerIdx = Math.floor(Math.random() * numbers.length);
+  quizAnswer = numbers[answerIdx];
+  const options = new Set([answerIdx]);
+  while(options.size < 4){
+    options.add(Math.floor(Math.random() * numbers.length));
+  }
+  const shuffled = Array.from(options).sort(() => Math.random() - 0.5);
+  choicesEl.innerHTML = '';
+  shuffled.forEach(idx => {
+    const btn = document.createElement('button');
+    btn.className = 'choice';
+    btn.textContent = numbers[idx].fr;
+    btn.addEventListener('click', () => {
+      const correct = numbers[idx].n === quizAnswer.n;
+      btn.classList.add(correct ? 'correct' : 'wrong');
+      statusEl.textContent = correct
+        ? 'Correct — that\'s "' + quizAnswer.fr + '" (' + quizAnswer.n + ')'
+        : 'Not quite — the answer was "' + quizAnswer.fr + '" (' + quizAnswer.n + ')';
+      document.querySelectorAll('.choice').forEach(c => {
+        if(c.textContent === quizAnswer.fr) c.classList.add('correct');
+        c.disabled = true;
+      });
+    });
+    choicesEl.appendChild(btn);
+  });
+}
+document.getElementById('quizPlay').addEventListener('click', () => speak(quizAnswer.fr));
+document.getElementById('nextQuiz').addEventListener('click', newQuestion);
+newQuestion();
+</script>
+</main>
+</body>
+</html>
